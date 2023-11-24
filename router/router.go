@@ -23,6 +23,7 @@ func NewRouter() {
 	productRepo := repo.NewProductRepo(db)
 	productUsecase := usecase.NewProductUsecase(productRepo)
 	productHandler := handler.NewProductHandler(productUsecase)
+	app.Get("/products", productHandler.Find)
 	app.Post("/products", productHandler.Create)
 
 	app.Listen(":9000")

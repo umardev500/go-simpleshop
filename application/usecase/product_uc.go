@@ -18,3 +18,8 @@ func NewProductUsecase(repo domain.ProductRepo) domain.ProductUsecase {
 func (p *productUsecase) Create(params model.ProductModelNew) error {
 	return p.repo.Create(params)
 }
+
+func (p *productUsecase) Find() ([]model.ProductModel, error) {
+	data, err := p.repo.Find()
+	return data, err
+}

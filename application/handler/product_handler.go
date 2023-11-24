@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"simpleshop/domain"
 	"simpleshop/domain/model"
 
@@ -31,4 +32,14 @@ func (p *productHandler) Create(c *fiber.Ctx) error {
 
 	// succeed block
 	return c.JSON("succeed")
+}
+
+func (p *productHandler) Find(c *fiber.Ctx) error {
+	data, err := p.uc.Find()
+	if err != nil {
+		fmt.Println(err)
+		return c.Status(500).JSON("failed to get data")
+	}
+
+	return c.JSON(data)
 }
