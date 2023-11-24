@@ -19,5 +19,11 @@ func NewRouter() {
 	userHandler := handler.NewUserHandler(userUsecase)
 	app.Post("/users", userHandler.Create)
 
+	// Product routers
+	productRepo := repo.NewProductRepo(db)
+	productUsecase := usecase.NewProductUsecase(productRepo)
+	productHandler := handler.NewProductHandler(productUsecase)
+	app.Post("/products", productHandler.Create)
+
 	app.Listen(":9000")
 }
