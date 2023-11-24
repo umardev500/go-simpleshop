@@ -18,13 +18,22 @@ func NewUserHandler(uc domain.UserUsecase) domain.UserHandler {
 }
 
 func (u *userHandler) Create(c *fiber.Ctx) error {
-	var payload model.NewUserModel = model.NewUserModel{
-		Username: "root",
-		Email:    "email@example.com",
-		Password: "root",
+	var user model.NewUserModel
+	err := c.BodyParser(&user)
+	if err != nil {
+		return c.Status(500).JSON("Failed to parsing data")
 	}
 
-	u.uc.Create(payload)
+	var payload model.NewUserModel = model.NewUserModel{
+		Username: user.Username,
+		Email:    user.Email,
+		Password: user.Password,
+	}
 
-	return nil
+	err = u.uc.Create(payload)
+	if err != nil {
+		return c.Status(500).JSON("Error failed to create user")
+	}
+
+	return c.JSON("Succesfuly create user")
 }

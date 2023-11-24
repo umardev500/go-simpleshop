@@ -11,9 +11,9 @@ type UserHandler interface {
 }
 
 type UserUsecase interface {
-	Create(payload model.NewUserModel)
+	Create(payload model.NewUserModel) error
 }
 
 type UserRepo interface {
-	Create(payload model.NewUserModel)
+	Create(payload model.NewUserModel) error
 }

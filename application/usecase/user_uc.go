@@ -15,6 +15,6 @@ func NewUserUsecase(repo domain.UserRepo) domain.UserUsecase {
 	}
 }
 
-func (u *userUsecase) Create(user model.NewUserModel) {
-	u.repo.Create(user)
+func (u *userUsecase) Create(user model.NewUserModel) error {
+	return u.repo.Create(user)
 }
