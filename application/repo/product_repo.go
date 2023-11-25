@@ -27,7 +27,7 @@ func (p *productRepo) Create(params model.ProductModelNew) error {
 
 func (p *productRepo) Find() ([]model.ProductModel, error) {
 	queryStr := `--sql
-	SELECT name, price, stock, created_at FROM products;
+	SELECT id, name, price, stock, created_at FROM products;
 	`
 	rows, err := p.db.Query(queryStr)
 	if err != nil {
@@ -38,7 +38,7 @@ func (p *productRepo) Find() ([]model.ProductModel, error) {
 
 	for rows.Next() {
 		var each model.ProductModel
-		err := rows.Scan(&each.Name, &each.Price, &each.Stock, &each.CreatedAt)
+		err := rows.Scan(&each.Id, &each.Name, &each.Price, &each.Stock, &each.CreatedAt)
 		if err != nil {
 			return nil, err
 		}
@@ -52,13 +52,13 @@ func (p *productRepo) Find() ([]model.ProductModel, error) {
 // Find product by id
 func (p *productRepo) FindById(id string) (model.ProductModel, error) {
 	queryStr := `--sql
-	SELECT name, price, stock, created_at FROM products
+	SELECT id, name, price, stock, created_at FROM products
 	WHERE id = $1;
 	`
 
 	var product model.ProductModel
 	row := p.db.QueryRow(queryStr, id)
-	err := row.Scan(&product.Name, &product.Price, &product.Stock, &product.CreatedAt)
+	err := row.Scan(&product.Id, &product.Name, &product.Price, &product.Stock, &product.CreatedAt)
 	if err != nil {
 		return product, err
 	}
