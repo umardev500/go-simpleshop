@@ -24,6 +24,7 @@ func NewRouter() {
 	productUsecase := usecase.NewProductUsecase(productRepo)
 	productHandler := handler.NewProductHandler(productUsecase)
 	app.Get("/products", productHandler.Find)
+	app.Get("/products/:id", productHandler.FindById)
 	app.Post("/products", productHandler.Create)
 
 	app.Listen(":9000")

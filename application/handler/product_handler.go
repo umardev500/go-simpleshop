@@ -43,3 +43,14 @@ func (p *productHandler) Find(c *fiber.Ctx) error {
 
 	return c.JSON(data)
 }
+
+func (p *productHandler) FindById(c *fiber.Ctx) error {
+	var id = c.Params("id")
+	data, err := p.uc.FindById(id)
+	if err != nil {
+		fmt.Println(err)
+		return c.Status(500).JSON("failed to get data")
+	}
+
+	return c.JSON(data)
+}

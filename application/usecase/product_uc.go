@@ -23,3 +23,8 @@ func (p *productUsecase) Find() ([]model.ProductModel, error) {
 	data, err := p.repo.Find()
 	return data, err
 }
+
+// Find product by id
+func (p *productUsecase) FindById(id string) (model.ProductModel, error) {
+	return p.repo.FindById(id)
+}

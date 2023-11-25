@@ -48,3 +48,20 @@ func (p *productRepo) Find() ([]model.ProductModel, error) {
 
 	return result, nil
 }
+
+// Find product by id
+func (p *productRepo) FindById(id string) (model.ProductModel, error) {
+	queryStr := `--sql
+	SELECT name, price, stock, created_at FROM products
+	WHERE id = $1;
+	`
+
+	var product model.ProductModel
+	row := p.db.QueryRow(queryStr, id)
+	err := row.Scan(&product.Name, &product.Price, &product.Stock, &product.CreatedAt)
+	if err != nil {
+		return product, err
+	}
+
+	return product, nil
+}
