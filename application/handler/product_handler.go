@@ -2,6 +2,7 @@ package handler
 
 import (
 	"fmt"
+	"simpleshop/constant"
 	"simpleshop/domain"
 	"simpleshop/domain/model"
 
@@ -44,6 +45,7 @@ func (p *productHandler) Find(c *fiber.Ctx) error {
 	return c.JSON(data)
 }
 
+// New code bellow
 func (p *productHandler) FindById(c *fiber.Ctx) error {
 	var id = c.Params("id")
 	data, err := p.uc.FindById(id)
@@ -53,4 +55,18 @@ func (p *productHandler) FindById(c *fiber.Ctx) error {
 	}
 
 	return c.JSON(data)
+}
+
+func (p *productHandler) Delete(c *fiber.Ctx) error {
+	var id = c.Params("id")
+	err := p.uc.Delete(id)
+	if err != nil {
+		if err == constant.ErrNoAffected {
+			return c.Status(404).JSON("data to delete not found")
+		}
+
+		return c.Status(500).JSON("failed to delete")
+	}
+
+	return c.JSON("product deleted")
 }

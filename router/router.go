@@ -26,6 +26,7 @@ func NewRouter() {
 	app.Get("/products", productHandler.Find)
 	app.Get("/products/:id", productHandler.FindById)
 	app.Post("/products", productHandler.Create)
+	app.Delete("/products/:id", productHandler.Delete)
 
 	app.Listen(":9000")
 }

@@ -65,3 +65,17 @@ func (p *productRepo) FindById(id string) (model.ProductModel, error) {
 
 	return product, nil
 }
+
+func (p *productRepo) Delete(id string) (int64, error) {
+	queryStr := `--sql
+	DELETE FROM products WHERE id = $1;
+	`
+
+	result, err := p.db.Exec(queryStr, id)
+	if err != nil {
+		return 0, err
+	}
+
+	affected, _ := result.RowsAffected()
+	return affected, nil
+}

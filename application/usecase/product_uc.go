@@ -1,6 +1,7 @@
 package usecase
 
 import (
+	"simpleshop/constant"
 	"simpleshop/domain"
 	"simpleshop/domain/model"
 )
@@ -27,4 +28,17 @@ func (p *productUsecase) Find() ([]model.ProductModel, error) {
 // Find product by id
 func (p *productUsecase) FindById(id string) (model.ProductModel, error) {
 	return p.repo.FindById(id)
+}
+
+func (p *productUsecase) Delete(id string) error {
+	affected, err := p.repo.Delete(id)
+	if err != nil {
+		return err
+	}
+
+	if affected < 1 {
+		return constant.ErrNoAffected
+	}
+
+	return nil
 }
