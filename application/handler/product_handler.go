@@ -70,3 +70,28 @@ func (p *productHandler) Delete(c *fiber.Ctx) error {
 
 	return c.JSON("product deleted")
 }
+
+func (p *productHandler) Update(c *fiber.Ctx) error {
+	var product model.ProductModelNew
+	err := c.BodyParser(&product)
+	if err != nil {
+		return c.Status(400).JSON("bad request")
+	}
+
+	var id = c.Params("id")
+	var payload = model.ProductModelNew{
+		Name:  product.Name,
+		Price: product.Price,
+		Stock: product.Stock,
+	}
+	err = p.uc.Update(id, payload)
+	if err != nil {
+		if err == constant.ErrNoAffected {
+			return c.Status(404).JSON("data to update not found")
+		}
+
+		return c.Status(500).JSON("failed to update")
+	}
+
+	return c.JSON("product updated")
+}

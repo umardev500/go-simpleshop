@@ -79,3 +79,17 @@ func (p *productRepo) Delete(id string) (int64, error) {
 	affected, _ := result.RowsAffected()
 	return affected, nil
 }
+
+func (p *productRepo) Update(id string, payload model.ProductModelNew) (int64, error) {
+	queryStr := `--sql
+	UPDATE products SET name = $1, price = $2, stock = $3 WHERE id = $4;
+	`
+
+	result, err := p.db.Exec(queryStr, payload.Name, payload.Price, payload.Stock, id)
+	if err != nil {
+		return 0, err
+	}
+
+	affected, _ := result.RowsAffected()
+	return affected, nil
+}

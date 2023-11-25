@@ -42,3 +42,16 @@ func (p *productUsecase) Delete(id string) error {
 
 	return nil
 }
+
+func (p *productUsecase) Update(id string, payload model.ProductModelNew) error {
+	affected, err := p.repo.Update(id, payload)
+	if err != nil {
+		return err
+	}
+
+	if affected < 1 {
+		return constant.ErrNoAffected
+	}
+
+	return nil
+}
