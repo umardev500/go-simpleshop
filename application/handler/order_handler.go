@@ -26,6 +26,16 @@ func (o *orderHandler) Find(c *fiber.Ctx) error {
 	return c.JSON(orders)
 }
 
+func (o *orderHandler) Delete(c *fiber.Ctx) error {
+	var id = c.Params("id")
+	err := o.uc.Delete(id)
+	if err != nil {
+		return c.Status(500).JSON("failed to delete order")
+	}
+
+	return c.JSON("order deleted")
+}
+
 func (o *orderHandler) Create(c *fiber.Ctx) error {
 	var payload model.NewOrderModel
 	if err := c.BodyParser(&payload); err != nil {

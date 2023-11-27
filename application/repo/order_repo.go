@@ -41,6 +41,17 @@ func (r *orderRepository) Create(payload model.Order) error {
 	return nil
 }
 
+func (r *orderRepository) Delete(id string) error {
+	// Assuming you have a table named "orders" in your database
+	query := `
+		DELETE FROM orders
+		WHERE id = $1
+	`
+
+	_, err := r.DB.Exec(query, id)
+	return err
+}
+
 func (r *orderRepository) Find() ([]model.Order, error) {
 	// Assuming you have a table named "orders" in your database
 	query := `

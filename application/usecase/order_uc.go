@@ -36,6 +36,15 @@ func (u *orderUsecase) Create(payload model.NewOrderModel) error {
 	return nil
 }
 
+func (u *orderUsecase) Delete(id string) error {
+	err := u.orderRepo.Delete(id)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (u *orderUsecase) Find() ([]model.Order, error) {
 	orders, err := u.orderRepo.Find()
 	if err != nil {

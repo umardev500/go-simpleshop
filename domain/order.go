@@ -9,14 +9,17 @@ import (
 type OrderHandler interface {
 	Create(c *fiber.Ctx) error
 	Find(c *fiber.Ctx) error
+	Delete(c *fiber.Ctx) error
 }
 
 type OrderUsecase interface {
 	Create(payload model.NewOrderModel) error
 	Find() ([]model.Order, error)
+	Delete(id string) error
 }
 
 type OrderRepo interface {
 	Create(payload model.Order) error
 	Find() ([]model.Order, error)
+	Delete(id string) error
 }
