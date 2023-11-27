@@ -26,6 +26,16 @@ func (o *orderHandler) Find(c *fiber.Ctx) error {
 	return c.JSON(orders)
 }
 
+func (o *orderHandler) FindById(c *fiber.Ctx) error {
+	var id = c.Params("id")
+	order, err := o.uc.FindById(id)
+	if err != nil {
+		return c.Status(500).JSON("failed to get data")
+	}
+
+	return c.JSON(order)
+}
+
 func (o *orderHandler) Delete(c *fiber.Ctx) error {
 	var id = c.Params("id")
 	err := o.uc.Delete(id)

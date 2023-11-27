@@ -52,3 +52,11 @@ func (u *orderUsecase) Find() ([]model.Order, error) {
 	}
 	return orders, nil
 }
+
+func (u *orderUsecase) FindById(id string) (model.Order, error) {
+	order, err := u.orderRepo.FindById(id)
+	if err != nil {
+		return model.Order{}, err
+	}
+	return order, nil
+}

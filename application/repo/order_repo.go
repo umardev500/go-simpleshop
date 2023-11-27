@@ -94,3 +94,36 @@ func (r *orderRepository) Find() ([]model.Order, error) {
 	return orders, nil
 
 }
+
+func (r *orderRepository) FindById(id string) (model.Order, error) {
+	// Assuming you have a table named "orders" in your database
+	query := `
+		SELECT json_build_object(
+			'id', id,
+			'user_id', user_id,
+			'order_number', order_number,
+			'status', status,
+			'total', total,
+			'created_at', created_at,
+			'updated_at', updated_at
+		) FROM orders
+		WHERE id = $1
+	`
+
+	// Execute the SQL query
+	row := r.DB.QueryRow(query, id)
+	var each []byte
+
+	if err := row.Scan(&each); err != nil {
+		fmt.Println(err)
+		return model.Order{}, fmt.Errorf("failed to find order: %v", err)
+	}
+
+	var order model.Order
+	if err := json.Unmarshal(each, &order); err != nil {
+		fmt.Println(err)
+		return model.Order{}, fmt.Errorf("failed to unmarshal order: %v", err)
+	}
+
+	return order, nil
+}
