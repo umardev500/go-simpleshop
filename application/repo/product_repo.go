@@ -1,7 +1,9 @@
 package repo
 
 import (
+	"bytes"
 	"database/sql"
+	"encoding/json"
 	"simpleshop/domain"
 	"simpleshop/domain/model"
 )
@@ -27,7 +29,7 @@ func (p *productRepo) Create(params model.ProductModelNew) error {
 
 func (p *productRepo) Find() ([]model.ProductModel, error) {
 	queryStr := `--sql
-	SELECT id, name, price, stock, created_at FROM products;
+	SELECT jsonb_build_object('id', id, 'name', name, 'price', price, 'stock', stock, 'created_at', created_at) as results FROM products;
 	`
 	rows, err := p.db.Query(queryStr)
 	if err != nil {
@@ -37,13 +39,16 @@ func (p *productRepo) Find() ([]model.ProductModel, error) {
 	var result []model.ProductModel
 
 	for rows.Next() {
-		var each model.ProductModel
-		err := rows.Scan(&each.Id, &each.Name, &each.Price, &each.Stock, &each.CreatedAt)
+		var each []byte
+		var prod model.ProductModel
+		err := rows.Scan(&each)
 		if err != nil {
 			return nil, err
 		}
+		decoder := json.NewDecoder(bytes.NewReader(each))
+		decoder.Decode(&prod)
 
-		result = append(result, each)
+		result = append(result, prod)
 	}
 
 	return result, nil

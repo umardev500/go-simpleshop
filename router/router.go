@@ -29,5 +29,11 @@ func NewRouter() {
 	app.Delete("/products/:id", productHandler.Delete)
 	app.Put("/products/:id", productHandler.Update)
 
+	// Order
+	orderRepo := repo.NewOrderRepository(db)
+	orderUsecase := usecase.NewOrderUsecase(orderRepo)
+	orderHandler := handler.NewOrderHandler(orderUsecase)
+	app.Post("/orders", orderHandler.Create)
+
 	app.Listen(":9000")
 }
