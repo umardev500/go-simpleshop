@@ -34,6 +34,7 @@ func NewRouter() {
 	orderUsecase := usecase.NewOrderUsecase(orderRepo)
 	orderHandler := handler.NewOrderHandler(orderUsecase)
 	app.Post("/orders", orderHandler.Create)
+	app.Get("/orders", orderHandler.Find)
 
 	app.Listen(":9000")
 }

@@ -17,6 +17,15 @@ func NewOrderHandler(uc domain.OrderUsecase) domain.OrderHandler {
 	}
 }
 
+func (o *orderHandler) Find(c *fiber.Ctx) error {
+	orders, err := o.uc.Find()
+	if err != nil {
+		return c.Status(500).JSON("failed to get data")
+	}
+
+	return c.JSON(orders)
+}
+
 func (o *orderHandler) Create(c *fiber.Ctx) error {
 	var payload model.NewOrderModel
 	if err := c.BodyParser(&payload); err != nil {
