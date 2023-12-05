@@ -133,7 +133,7 @@ func (r *orderRepository) SetStatus(id int64, status string) (int64, error) {
 	query := `
 		UPDATE orders
 		SET status = $1
-		WHERE id = $2
+		WHERE order_number = $2
 	`
 
 	result, err := r.DB.Exec(

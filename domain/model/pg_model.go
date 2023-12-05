@@ -6,8 +6,7 @@ type TransactionDetails struct {
 }
 
 type BankTransfer struct {
-	Bank     string `json:"bank"`
-	VANumber string `json:"va_number"`
+	Bank string `json:"bank"`
 }
 
 type PaymentRequest struct {

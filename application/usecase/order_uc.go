@@ -48,8 +48,7 @@ func (u *orderUsecase) Create(payload model.NewOrderModel) error {
 			GrossAmount: total,
 		},
 		BankTransfer: model.BankTransfer{
-			Bank:     constant.Bni,
-			VANumber: "1111",
+			Bank: constant.Bni,
 		},
 	}
 	// Convert to json

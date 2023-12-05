@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"simpleshop/domain"
 	"simpleshop/domain/model"
+	"strconv"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -63,18 +64,29 @@ func (o *orderHandler) Create(c *fiber.Ctx) error {
 }
 
 func (o *orderHandler) Callback(c *fiber.Ctx) error {
+	fmt.Println("calling...")
 	var payload model.Callback
 	if err := c.BodyParser(&payload); err != nil {
 		fmt.Println(err)
 		return c.Status(400).JSON("bad request")
 	}
-	if payload.StatusCode != "201" {
+	if payload.StatusCode != "201" && payload.StatusCode != "200" {
 		fmt.Println(payload.Message)
 		// Check for status code
 		return c.Status(500).JSON("failed to create payment")
 	}
 
-	vaNumber := payload.VANumbers[0].VANumber
-	fmt.Println("called", payload.TransactionStatus, *vaNumber)
+	if payload.TransactionStatus != "pending" {
+		// call api
+		vaNumber := payload.VANumbers[0].VANumber
+		vaNumberInt, _ := strconv.Atoi(*vaNumber)
+		err := o.uc.SetStatus(int64(vaNumberInt), payload.TransactionStatus)
+		if err != nil {
+			fmt.Println(err)
+			return c.SendStatus(500)
+		}
+		fmt.Println("called", payload.TransactionStatus, *vaNumber)
+	}
+
 	return c.JSON("ok")
 }
