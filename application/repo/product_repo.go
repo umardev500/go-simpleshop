@@ -29,7 +29,14 @@ func (p *productRepo) Create(params model.ProductModelNew) error {
 
 func (p *productRepo) Find() ([]model.ProductModel, error) {
 	queryStr := `--sql
-	SELECT jsonb_build_object('id', id, 'name', name, 'price', price, 'stock', stock, 'created_at', created_at) as results FROM products;
+		SELECT jsonb_build_object(
+			'id', id,
+			'name', name,
+			'price', price,
+			'stock', stock,
+			'created_at', created_at
+			) as results
+		FROM products;
 	`
 	rows, err := p.db.Query(queryStr)
 	if err != nil {

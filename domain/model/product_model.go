@@ -13,5 +13,5 @@ type ProductModel struct {
 	Name      string    `json:"name"`
 	Price     float64   `json:"price"`
 	Stock     int       `json:"stock"`
-	CreatedAt time.Time `json:"create_at"`
+	CreatedAt time.Time `json:"created_at"`
 }
