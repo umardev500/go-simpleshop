@@ -9,6 +9,7 @@ import (
 	"simpleshop/domain"
 	"simpleshop/domain/model"
 	"simpleshop/utils"
+	"strconv"
 )
 
 type orderUsecase struct {
@@ -75,7 +76,9 @@ func (u *orderUsecase) Create(payload model.NewOrderModel) error {
 	}
 
 	va := transaction.VANumbers[0] // get va number
+	id, _ := strconv.Atoi(orderID)
 	order := model.Order{
+		ID:          int64(id),
 		UserID:      payload.UserID,
 		OrderNumber: *va.VANumber,
 		Total:       total,

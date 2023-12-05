@@ -22,16 +22,17 @@ func (r *orderRepository) Create(payload model.Order) error {
 	// Assuming you have a table named "orders" in your database
 	query := `
 		INSERT INTO orders (
+			id,
 			user_id,
 			order_number,
 			total
 		) VALUES (
-			$1, $2, $3
+			$1, $2, $3, $4
 		)
 	`
 
 	// Execute the SQL query
-	_, err := r.DB.Exec(query, payload.UserID, payload.OrderNumber, payload.Total)
+	_, err := r.DB.Exec(query, payload.ID, payload.UserID, payload.OrderNumber, payload.Total)
 
 	if err != nil {
 		fmt.Println(err)
