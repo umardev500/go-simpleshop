@@ -1,0 +1,10 @@
+{
+  "payment_type": "bank_transfer",
+  "transaction_details": {
+    "gross_amount": 10000,
+    "order_id": "0923409324"
+  },
+  "bank_transfer": {
+    "bank": "bni"
+  }
+}

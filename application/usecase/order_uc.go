@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"os"
 	"simpleshop/constant"
@@ -47,7 +48,8 @@ func (u *orderUsecase) Create(payload model.NewOrderModel) error {
 			GrossAmount: total,
 		},
 		BankTransfer: model.BankTransfer{
-			Bank: constant.Bni,
+			Bank:     constant.Bni,
+			VANumber: "1111",
 		},
 	}
 	// Convert to json
@@ -58,6 +60,7 @@ func (u *orderUsecase) Create(payload model.NewOrderModel) error {
 	// Use http post client
 	body, err := utils.Post(url, bodyString)
 	if err != nil {
+		fmt.Println(err)
 		return err
 	}
 
@@ -69,7 +72,7 @@ func (u *orderUsecase) Create(payload model.NewOrderModel) error {
 
 	if *transaction.StatusCode != "201" {
 		// Check for status code
-		return fmt.Errorf("failed to create payment")
+		return errors.New(*transaction.StatusMessage)
 	}
 
 	va := transaction.VANumbers[0] // get va number
@@ -84,6 +87,7 @@ func (u *orderUsecase) Create(payload model.NewOrderModel) error {
 	if err != nil {
 		return err
 	}
+	fmt.Println("order done")
 
 	return nil
 }

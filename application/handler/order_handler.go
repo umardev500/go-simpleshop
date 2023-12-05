@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"simpleshop/domain"
 	"simpleshop/domain/model"
 
@@ -54,7 +55,7 @@ func (o *orderHandler) Create(c *fiber.Ctx) error {
 
 	err := o.uc.Create(payload)
 	if err != nil {
-		return c.Status(500).JSON("failed to create order")
+		return c.Status(500).JSON(err.Error())
 	}
 
 	// succeed block
@@ -62,6 +63,18 @@ func (o *orderHandler) Create(c *fiber.Ctx) error {
 }
 
 func (o *orderHandler) Callback(c *fiber.Ctx) error {
+	var payload model.Callback
+	if err := c.BodyParser(&payload); err != nil {
+		fmt.Println(err)
+		return c.Status(400).JSON("bad request")
+	}
+	if payload.StatusCode != "201" {
+		fmt.Println(payload.Message)
+		// Check for status code
+		return c.Status(500).JSON("failed to create payment")
+	}
 
-	return nil
+	vaNumber := payload.VANumbers[0].VANumber
+	fmt.Println("called", payload.TransactionStatus, *vaNumber)
+	return c.JSON("ok")
 }
