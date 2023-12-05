@@ -16,3 +16,7 @@ type NewOrderModel struct {
 	UserID   int64   `json:"user_id"`
 	Products []int64 `json:"products"`
 }
+
+type OrderStatusSet struct {
+	ID int64 `json:"id"`
+}

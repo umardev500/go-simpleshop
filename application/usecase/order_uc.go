@@ -1,7 +1,10 @@
 package usecase
 
 import (
+	"encoding/json"
 	"fmt"
+	"os"
+	"simpleshop/constant"
 	"simpleshop/domain"
 	"simpleshop/domain/model"
 	"simpleshop/utils"
@@ -34,19 +37,53 @@ func (u *orderUsecase) Create(payload model.NewOrderModel) error {
 		total += price
 	}
 
-	order := model.Order{
-		UserID:      payload.UserID,
-		OrderNumber: utils.GenerateRandomNumber(),
-		Total:       total,
+	// Call midtrans
+	orderID := utils.GenerateRandomNumber() // create order id
+	// Create data for midtrans
+	payment := model.PaymentRequest{
+		PaymentType: constant.BankTransfer,
+		TransactionDetails: model.TransactionDetails{
+			OrderID:     orderID,
+			GrossAmount: total,
+		},
+		BankTransfer: model.BankTransfer{
+			Bank: constant.Bni,
+		},
 	}
-	// Delegate the creation to the repository
-	err := u.orderRepo.Create(order)
+	// Convert to json
+	bodyString, _ := json.Marshal(payment)
+	baseURL := os.Getenv("PG_URL")
+	url := fmt.Sprintf("%s/v2/charge", baseURL)
+
+	// Use http post client
+	body, err := utils.Post(url, bodyString)
 	if err != nil {
-		// Handle the error appropriately
 		return err
 	}
 
-	// Your business logic after creating an order goes here, if needed
+	var transaction model.BankTransferTransaction
+	err = json.Unmarshal(body, &transaction) // convert json to struct
+	if err != nil {
+		return err
+	}
+
+	if *transaction.StatusCode != "201" {
+		// Check for status code
+		return fmt.Errorf("failed to create payment")
+	}
+
+	va := transaction.VANumbers[0] // get va number
+	order := model.Order{
+		UserID:      payload.UserID,
+		OrderNumber: *va.VANumber,
+		Total:       total,
+	}
+
+	// Do create order
+	err = u.orderRepo.Create(order)
+	if err != nil {
+		return err
+	}
 
 	return nil
 }
@@ -74,4 +111,17 @@ func (u *orderUsecase) FindById(id string) (model.Order, error) {
 		return model.Order{}, err
 	}
 	return order, nil
+}
+
+func (u *orderUsecase) SetStatus(id int64, status string) error {
+	affected, err := u.orderRepo.SetStatus(id, status)
+	if err != nil {
+		return err
+	}
+
+	if affected < 1 {
+		return constant.ErrNoAffected
+	}
+
+	return nil
 }

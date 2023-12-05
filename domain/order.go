@@ -11,6 +11,7 @@ type OrderHandler interface {
 	Find(c *fiber.Ctx) error
 	Delete(c *fiber.Ctx) error
 	FindById(c *fiber.Ctx) error
+	Callback(c *fiber.Ctx) error
 }
 
 type OrderUsecase interface {
@@ -18,6 +19,7 @@ type OrderUsecase interface {
 	Find() ([]model.Order, error)
 	FindById(id string) (model.Order, error)
 	Delete(id string) error
+	SetStatus(id int64, status string) error
 }
 
 type OrderRepo interface {
@@ -25,4 +27,5 @@ type OrderRepo interface {
 	Find() ([]model.Order, error)
 	FindById(id string) (model.Order, error)
 	Delete(id string) error
+	SetStatus(id int64, status string) (int64, error)
 }

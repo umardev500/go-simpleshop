@@ -7,5 +7,5 @@ CREATE TABLE products (
     updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
 );
 INSERT INTO products (name, price, stock)
-VALUES ('Product 1', 19.99, 5),
-    ('Product 2', 29.99, 10);
+VALUES ('Product 1', 19, 5),
+    ('Product 2', 29, 10);

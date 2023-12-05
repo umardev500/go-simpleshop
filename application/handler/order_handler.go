@@ -60,3 +60,8 @@ func (o *orderHandler) Create(c *fiber.Ctx) error {
 	// succeed block
 	return c.JSON("succeed")
 }
+
+func (o *orderHandler) Callback(c *fiber.Ctx) error {
+
+	return nil
+}

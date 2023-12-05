@@ -127,3 +127,28 @@ func (r *orderRepository) FindById(id string) (model.Order, error) {
 
 	return order, nil
 }
+
+func (r *orderRepository) SetStatus(id int64, status string) (int64, error) {
+	// Assuming you have a table named "orders" in your database
+	query := `
+		UPDATE orders
+		SET status = $1
+		WHERE id = $2
+	`
+
+	result, err := r.DB.Exec(
+		query,
+		status,
+		id,
+	)
+	if err != nil {
+		return 0, err
+	}
+
+	affected, err := result.RowsAffected()
+	if err != nil {
+		return 0, err
+	}
+
+	return affected, nil
+}
