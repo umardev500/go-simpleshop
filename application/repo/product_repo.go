@@ -62,7 +62,7 @@ func (p *productRepo) Find() ([]model.ProductModel, error) {
 }
 
 // Find product by id
-func (p *productRepo) FindById(id string) (model.ProductModel, error) {
+func (p *productRepo) FindById(id int64) (model.ProductModel, error) {
 	queryStr := `--sql
 	SELECT id, name, price, stock, created_at FROM products
 	WHERE id = $1;
@@ -78,7 +78,7 @@ func (p *productRepo) FindById(id string) (model.ProductModel, error) {
 	return product, nil
 }
 
-func (p *productRepo) Delete(id string) (int64, error) {
+func (p *productRepo) Delete(id int64) (int64, error) {
 	queryStr := `--sql
 	DELETE FROM products WHERE id = $1;
 	`
@@ -92,7 +92,7 @@ func (p *productRepo) Delete(id string) (int64, error) {
 	return affected, nil
 }
 
-func (p *productRepo) Update(id string, payload model.ProductModelNew) (int64, error) {
+func (p *productRepo) Update(id int64, payload model.ProductModelNew) (int64, error) {
 	queryStr := `--sql
 	UPDATE products SET name = $1, price = $2, stock = $3 WHERE id = $4;
 	`

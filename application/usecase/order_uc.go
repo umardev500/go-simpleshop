@@ -1,28 +1,43 @@
 package usecase
 
 import (
+	"fmt"
 	"simpleshop/domain"
 	"simpleshop/domain/model"
 	"simpleshop/utils"
 )
 
 type orderUsecase struct {
-	orderRepo domain.OrderRepo
+	orderRepo   domain.OrderRepo
+	productRepo domain.ProductRepo
 }
 
-func NewOrderUsecase(orderRepo domain.OrderRepo) domain.OrderUsecase {
+func NewOrderUsecase(orderRepo domain.OrderRepo, productRepo domain.ProductRepo) domain.OrderUsecase {
 	return &orderUsecase{
-		orderRepo: orderRepo,
+		orderRepo:   orderRepo,
+		productRepo: productRepo,
 	}
 }
 
 func (u *orderUsecase) Create(payload model.NewOrderModel) error {
 	// Your business logic before creating an order goes here, if needed
+	var total float64
+	for _, productID := range payload.Products {
+		product, err := u.productRepo.FindById(productID)
+		if err != nil {
+			fmt.Println(err)
+			return err
+		}
+
+		// calculate
+		price := product.Price
+		total += price
+	}
 
 	order := model.Order{
 		UserID:      payload.UserID,
 		OrderNumber: utils.GenerateRandomNumber(),
-		Total:       44.0,
+		Total:       total,
 	}
 	// Delegate the creation to the repository
 	err := u.orderRepo.Create(order)

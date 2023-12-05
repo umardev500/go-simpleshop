@@ -5,6 +5,7 @@ import (
 	"simpleshop/constant"
 	"simpleshop/domain"
 	"simpleshop/domain/model"
+	"strconv"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -48,7 +49,8 @@ func (p *productHandler) Find(c *fiber.Ctx) error {
 // New code bellow
 func (p *productHandler) FindById(c *fiber.Ctx) error {
 	var id = c.Params("id")
-	data, err := p.uc.FindById(id)
+	idInt, _ := strconv.Atoi(id)
+	data, err := p.uc.FindById(int64(idInt))
 	if err != nil {
 		fmt.Println(err)
 		return c.Status(500).JSON("failed to get data")
@@ -59,7 +61,8 @@ func (p *productHandler) FindById(c *fiber.Ctx) error {
 
 func (p *productHandler) Delete(c *fiber.Ctx) error {
 	var id = c.Params("id")
-	err := p.uc.Delete(id)
+	idInt, _ := strconv.Atoi(id)
+	err := p.uc.Delete(int64(idInt))
 	if err != nil {
 		if err == constant.ErrNoAffected {
 			return c.Status(404).JSON("data to delete not found")
@@ -79,12 +82,13 @@ func (p *productHandler) Update(c *fiber.Ctx) error {
 	}
 
 	var id = c.Params("id")
+	idInt, _ := strconv.Atoi(id)
 	var payload = model.ProductModelNew{
 		Name:  product.Name,
 		Price: product.Price,
 		Stock: product.Stock,
 	}
-	err = p.uc.Update(id, payload)
+	err = p.uc.Update(int64(idInt), payload)
 	if err != nil {
 		if err == constant.ErrNoAffected {
 			return c.Status(404).JSON("data to update not found")

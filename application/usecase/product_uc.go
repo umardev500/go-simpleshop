@@ -26,11 +26,11 @@ func (p *productUsecase) Find() ([]model.ProductModel, error) {
 }
 
 // Find product by id
-func (p *productUsecase) FindById(id string) (model.ProductModel, error) {
+func (p *productUsecase) FindById(id int64) (model.ProductModel, error) {
 	return p.repo.FindById(id)
 }
 
-func (p *productUsecase) Delete(id string) error {
+func (p *productUsecase) Delete(id int64) error {
 	affected, err := p.repo.Delete(id)
 	if err != nil {
 		return err
@@ -43,7 +43,7 @@ func (p *productUsecase) Delete(id string) error {
 	return nil
 }
 
-func (p *productUsecase) Update(id string, payload model.ProductModelNew) error {
+func (p *productUsecase) Update(id int64, payload model.ProductModelNew) error {
 	affected, err := p.repo.Update(id, payload)
 	if err != nil {
 		return err
