@@ -70,7 +70,9 @@ func (o *orderHandler) Callback(c *fiber.Ctx) error {
 		fmt.Println(err)
 		return c.Status(400).JSON("bad request")
 	}
-	if payload.StatusCode != "201" && payload.StatusCode != "200" {
+	code, _ := strconv.Atoi(payload.StatusCode)
+
+	if code < 200 && code > 200 {
 		fmt.Println(payload.Message)
 		// Check for status code
 		return c.Status(500).JSON("failed to create payment")
